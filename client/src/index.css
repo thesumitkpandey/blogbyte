@@ -1,0 +1,42 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem; /* Adjust padding as needed */
+  background-color: #f0f0f0; /* Adjust background color as needed */
+}
+
+.navbar-left,
+.navbar-mid,
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-left img {
+  height: 50px; /* Adjust image height as needed */
+}
+
+.navbar-mid a {
+  margin-right: 1rem; /* Adjust margin as needed */
+  text-decoration: none;
+  color: #333; /* Adjust text color as needed */
+  font-weight: bold;
+}
+
+.navbar-mid a.active {
+  color: #007bff; /* Adjust active link color as needed */
+}
+
+.navbar-right a {
+  margin-left: 1rem; /* Adjust margin as needed */
+}
+
+.navbar-right svg {
+  margin-right: 1rem; /* Adjust margin as needed */
+  font-size: 1.5rem; /* Adjust font size as needed */
+}
