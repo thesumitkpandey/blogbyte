@@ -1,7 +1,7 @@
-const express=require("express")
+const express = require("express");
 
-const app=express()
+const app = express();
+//
 
-
-app.use("/api/user",userRouter)
-module.exports=app
+app.use("/api/user", userRouter);
+module.exports = app;
