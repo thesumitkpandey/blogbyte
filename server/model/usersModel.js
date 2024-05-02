@@ -19,20 +19,20 @@ const userSchema = new mongoose.Schema(
     },
     userName: {
       type: String,
-      unique: true,
+
       required: true,
-      trim: true,
+
       lowercase: true,
     },
-    profilePicture: {
-      type: String,
-    },
+    // profilePicture: {
+    //   type: String,
+    // },
   },
   { timestamps: true },
 );
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    this.password = bcrypt.hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, 10);
   } else {
     return next();
   }
