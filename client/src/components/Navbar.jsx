@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { ImSearch } from "react-icons/im";
 import logo from "../assets/logo.png";
 import classes from "../css/Navbar.module.css";
@@ -78,17 +78,9 @@ export default function Navbar() {
       </div>
       <div className={classes.navbarRight}>
         <ImSearch />
-        <button className={classes.signIn}>
-          <NavLink
-            to="/signin"
-            className={({ isActive }) =>
-              isActive ? classes.btnActive : undefined
-            }
-            end
-          >
-            SignIn
-          </NavLink>
-        </button>
+        <Link to="/signin" className={classes.signIn}>
+          SignIn
+        </Link>
       </div>
     </div>
   );

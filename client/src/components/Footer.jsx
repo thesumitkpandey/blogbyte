@@ -27,7 +27,6 @@ export default function Footer() {
           <img src={linkedin} className={classes.footerRightItems} />
         </li>
       </ul>
-      <div className={classes.contact}></div>
     </div>
   );
 }

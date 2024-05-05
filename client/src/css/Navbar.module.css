@@ -8,6 +8,7 @@
   font-weight: bold;
   font-size: 18px;
   height: 8vh;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .navbarMid {
   display: flex;
@@ -15,15 +16,24 @@
   justify-content: space-between;
   align-items: center;
 }
-.navbar a {
+.navbarMid a {
   text-decoration: none;
   color: #000;
 }
+.navbarRight {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .signIn {
-  background-color: #fff;
-  border: 1px solid rgb(176, 0, 32);
-  height: 6vh;
-  width: 8vw;
-  border-radius: 7%;
-  margin: 1vh 0;
+  background-color: #b00020;
+  height: 80%;
+  width: 10vw;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 9%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
