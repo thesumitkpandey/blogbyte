@@ -1,87 +1,41 @@
 import { NavLink, Link } from "react-router-dom";
-import { ImSearch } from "react-icons/im";
-import logo from "../assets/logo.png";
-import classes from "../css/Navbar.module.css";
+import { useState } from "react";
+import categories from "../utils/categories";
+import Auth from "./Auth";
+import logo from "../assets/logo.jpg";
 export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  function popUp() {
+    setIsOpen(!isOpen);
+  }
+  function popUpClose() {
+    setIsOpen(!isOpen);
+  }
   return (
-    <div className={classes.navbar}>
-      <div className={classes.navbarLeft}>
-        <h1>blogbyte</h1>
-      </div>
-      <div className={classes.navbarMid}>
-        <div className="navbarMidItems">
-          <NavLink
-            to="technology"
-            className={({ isActive }) =>
-              isActive ? "classes.active" : undefined
-            }
-            end
-          >
-            Technology
-          </NavLink>
+    <>
+      <div className="h-12 flex  bg-slate-600 md:justify-between ">
+        <div className="">
+          <img className="w-40 h-12" src={logo} />
         </div>
-        <div className="navbarMidItems">
-          <NavLink
-            to="business"
-            className={({ isActive }) =>
-              isActive ? "classes.active" : undefined
-            }
-            end
-          >
-            Business
-          </NavLink>
+        <div className="">
+          {categories.map((value) => (
+            <div key={value} className="">
+              <NavLink
+                to={`/${value}`}
+                className={({ isActive }) => (isActive ? "" : "undefined")}
+                end
+              >
+                {value}
+              </NavLink>
+            </div>
+          ))}
         </div>
-        <div className="navbarMidItems">
-          <NavLink
-            to="environment"
-            className={({ isActive }) =>
-              isActive ? "classes.active" : undefined
-            }
-            end
-          >
-            Environment
-          </NavLink>
-        </div>
-        <div className="navbarMidItems">
-          <NavLink
-            to="politics"
-            className={({ isActive }) =>
-              isActive ? "classes.active" : undefined
-            }
-            end
-          >
-            Politics
-          </NavLink>
-        </div>
-        <div className="navbarMidItems">
-          <NavLink
-            to="entertainment"
-            className={({ isActive }) =>
-              isActive ? "classes.active" : undefined
-            }
-            end
-          >
-            entertaiment
-          </NavLink>
-        </div>
-        <div className="navbarMidItems">
-          <NavLink
-            to="sports"
-            className={({ isActive }) =>
-              isActive ? classes.active : undefined
-            }
-            end
-          >
-            Sports
-          </NavLink>
+        <div className="">
+          <button onClick={popUp}>Sign In</button>
         </div>
       </div>
-      <div className={classes.navbarRight}>
-        <ImSearch />
-        <Link to="/signin" className={classes.signIn}>
-          SignIn
-        </Link>
-      </div>
-    </div>
+      <Auth isOpen={isOpen} popUpClose={popUpClose} />
+    </>
   );
 }

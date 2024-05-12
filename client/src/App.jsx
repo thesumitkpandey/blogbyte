@@ -1,36 +1,25 @@
-import { createBrowserRouter, RouterProvider} from "react-router-dom"
-import Layout from './pages/Layout'
-import ErrorPage from "./pages/ErrorPage"
-import Home from "./pages/Home"
-import Contact from "./pages/Contact"
-import About from "./pages/About"
-import Technology from "./pages/Technology"
-import Business from "./pages/Business"
-import Environment from "./pages/Environment"
-import Politics from "./pages/Politics"
-import Entertainment from "./pages/Entertainment"
-import Sports from "./pages/Sports"
-import SignIn from "./pages/SignIn"
+import Layout from "./components/Layout";
+import Navbar from "./components/Navbar";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import categories from "./utils/categories";
+import CategoriesPage from "./pages/CategoriesPage";
 
-
-const router=createBrowserRouter([
-  {path: "/", element: <Layout/>, errorElement: <ErrorPage/>, children: [
-      {index:true, element: <Home/>},
-      {path: "technology", element: <Technology/>},
-      {path: "business", element: <Business/>},
-      {path: "environment", element: <Environment/>},
-      {path: "politics", element: <Politics/>},
-      {path: "entertainment", element: <Entertainment/>},
-      {path: "sports", element: <Sports/>},
-      {path: "signin", element: <SignIn/>}
-
-  ]}
-])
-
-export default function App(){
-  return (
-    <>
-    <RouterProvider router={router}/>
-    </>
-  )
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    errorElement: <h1>Not found</h1>,
+    children: [
+      { index: true, element: <HomePage /> },
+      ...categories.map((item) => ({
+        path: `/${item}`,
+        element: <CategoriesPage />,
+      })),
+      { path: "/new", element: <h1>New</h1> },
+    ],
+  },
+]);
+export default function App() {
+  return <RouterProvider router={router} />;
 }

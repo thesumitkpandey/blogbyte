@@ -1,32 +1,51 @@
-import classes from "../css/Footer.module.css";
-import instagram from "../assets/instagram.svg";
-import whatsapp from "../assets/whatsapp.svg";
-import youtube from "../assets/youtube.svg";
-import x from "../assets/x.svg";
-import linkedin from "../assets/linkedin.svg";
-import { IoLogoWhatsapp } from "react-icons/io";
-
+import {
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaYoutube,
+  FaLinkedin,
+  FaWhatsapp,
+} from "react-icons/fa";
+import logo from "../assets/logo.jpg";
+import { Link } from "react-router-dom";
 export default function Footer() {
   return (
-    <div className={classes.footer}>
-      <h1 className={classes.footerLeft}>Logo</h1>
-      <ul className={classes.footerRight}>
-        <li>
-          <img src={instagram} className={classes.footerRightItems} />
-        </li>
-        <li>
-          <img src={whatsapp} className={classes.footerRightItems} />
-        </li>
-        <li>
-          <img src={x} className={classes.footerRightItems} />
-        </li>
-        <li>
-          <img src={youtube} className={classes.footerRightItems} />
-        </li>
-        <li>
-          <img src={linkedin} className={classes.footerRightItems} />
-        </li>
-      </ul>
+    <div className="bg-[red] h-28">
+      <div>
+        <ul className="flex justify-center md:justify-end">
+          <img src={logo} alt="logo" className="hidden md:block " />
+          <li className="mr-8">
+            <Link to="https://www.facebook.com">
+              <FaFacebook size={30} />
+            </Link>
+          </li>
+          <li className="mr-8">
+            <Link to="https://www.twitter.com">
+              <FaTwitter size={30} />
+            </Link>
+          </li>
+          <li className="mr-8">
+            <Link to="https://www.instagram.com">
+              <FaInstagram size={30} />
+            </Link>
+          </li>
+          <li className="mr-8">
+            <Link to="https://www.youtube.com">
+              <FaYoutube size={30} />
+            </Link>
+          </li>
+          <li className="mr-8">
+            <Link to="https://www.linkedin.com">
+              <FaLinkedin size={30} />
+            </Link>
+          </li>
+          <li className="mr-8">
+            <Link to="https://api.whatsapp.com">
+              <FaWhatsapp size={30} />
+            </Link>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }
