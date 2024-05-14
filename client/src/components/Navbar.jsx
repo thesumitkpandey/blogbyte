@@ -2,10 +2,10 @@ import { NavLink, Link } from "react-router-dom";
 import { useState } from "react";
 import categories from "../utils/categories";
 import Auth from "./Auth";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.png";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-
+  //#5340ff main color
   function popUp() {
     setIsOpen(!isOpen);
   }
@@ -14,9 +14,11 @@ export default function Navbar() {
   }
   return (
     <>
-      <div className="h-12 flex  bg-slate-600 md:justify-between ">
-        <div className="">
-          <img className="w-40 h-12" src={logo} />
+      <div className="h-12 flex  bg-white justify-between  shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <div className="rounded-xl overflow-hidden">
+          <Link to="/">
+            <img className="w-full h-full object-cover" src={logo} />
+          </Link>
         </div>
         <div className="">
           {categories.map((value) => (

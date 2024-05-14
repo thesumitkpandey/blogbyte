@@ -3,18 +3,16 @@ import {
   signUp,
   signIn,
   protect,
-  secret,
-  deleteMe,
-  restrictTo,
   forgotPassword,
-} from "../controller/authController.js";
+  deleteMyAccount,
+} from "../controller/userController.js";
 const router = express.Router();
 
+//Authentication routes
 router
   .post("/signUp", signUp)
   .post("/signIn", signIn)
   .post("/forgot", forgotPassword)
-  .delete("/deleteMe", protect, deleteMe);
-router.route("/secret").get(protect, restrictTo("admin"), secret);
+  .delete("/deletemyaccount", protect, deleteMyAccount);
 
 export default router;

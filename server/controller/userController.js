@@ -4,6 +4,7 @@ import users from "../model/usersModel.js";
 import bcrypt from "bcrypt";
 import jwt, { decode } from "jsonwebtoken";
 import crypto from "crypto";
+import restrictTo from "../middleware/restrictTo.js";
 
 const signUp = asyncErrorHandler(async (req, res, next) => {
   //We can also add input santization using validator library
@@ -30,16 +31,17 @@ const signUp = asyncErrorHandler(async (req, res, next) => {
 });
 
 const signIn = asyncErrorHandler(async (req, res, next) => {
+  console.log(req.body);
   //Input sanatization can be perforemd here also withh the help of validator
   let { userName, email, password } = req.body;
   if (!userName && !email) {
-    return next(new CustomError("Please enter a valid email or username", 401));
+    return next(new CustomError("Please enter a valid email or username", 400));
   }
   const correctUserData = await users.findOne({
     $or: [{ userName }, { email }],
   });
   if (!correctUserData) {
-    return next(new CustomError("Incorrect credentials please try again", 401));
+    return next(new CustomError("Incorrect credentials please try again", 400));
   }
 
   let isValidPassword = await bcrypt.compare(
@@ -47,7 +49,7 @@ const signIn = asyncErrorHandler(async (req, res, next) => {
     correctUserData.password,
   );
   if (!isValidPassword) {
-    return next(new CustomError("Invalid password", 401));
+    return next(new CustomError("Invalid password", 400));
   }
   const jwtToken = jwt.sign(
     { id: correctUserData._id },
@@ -59,12 +61,12 @@ const signIn = asyncErrorHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     token: jwtToken,
-  });
-});
-const secret = asyncErrorHandler(async (req, res, next) => {
-  console.log(`The following details has been printed from secret${req.user}`);
-  res.status(200).json({
-    message: "This is a safe route and only to be accessed after login",
+    user: {
+      name: correctUserData.name,
+      id: correctUserData.id,
+      email: correctUserData.email,
+      profilePicture: correctUserData.profilePicture,
+    },
   });
 });
 const protect = asyncErrorHandler(async (req, res, next) => {
@@ -93,34 +95,24 @@ const protect = asyncErrorHandler(async (req, res, next) => {
   req.user = freshUser;
   next();
 });
-const restrictTo = (...role) => {
-  return (req, res, next) => {
-    if (!role.includes(req.user.role)) {
-      return next(
-        new CustomError("You don't have permission to access this item", 403),
-      );
-    }
-    next();
-  };
-};
 
 //Forget user controller is not complete
 const forgotPassword = asyncErrorHandler(async (req, res, next) => {
   const { email } = req.body;
   if (!email) {
-    return next(new CustomError("Please enter your email", 401));
+    return next(new CustomError("Please enter your email", 400));
   }
   const user = users.findOne({ email });
   if (!user) {
     return next(
-      new CustomError("Please enter correct userName or Password", 401),
+      new CustomError("Please enter correct userName or Password", 400),
     );
   }
   const resetToken = users.createPasswordResetToken();
   users.save({ validateBeforeSave: false });
   next();
 });
-const deleteMe = asyncErrorHandler(async (req, res, next) => {
+const deleteMyAccount = asyncErrorHandler(async (req, res, next) => {
   let user = await users.findByIdAndUpdate(req.user.id, { active: false });
   res.status(204).json({
     success: true,
@@ -128,12 +120,4 @@ const deleteMe = asyncErrorHandler(async (req, res, next) => {
   });
   next();
 });
-export {
-  signUp,
-  signIn,
-  protect,
-  secret,
-  restrictTo,
-  forgotPassword,
-  deleteMe,
-};
+export { signUp, signIn, protect, forgotPassword, deleteMyAccount };
