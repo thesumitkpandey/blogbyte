@@ -25,9 +25,7 @@ const userSchema = new mongoose.Schema(
     },
     userName: {
       type: String,
-
       required: true,
-
       lowercase: true,
     },
     passwordChangedAt: {
@@ -43,8 +41,10 @@ const userSchema = new mongoose.Schema(
     passwordResetExpiresIn: {
       type: Date,
     },
-    profilePicture: {
+    avatar: {
       type: String,
+      default:
+        "https://res.cloudinary.com/duzhcfqn6/image/upload/v1715772134/dzmugchkvouoegpn6tjy.png",
     },
   },
   { timestamps: true },

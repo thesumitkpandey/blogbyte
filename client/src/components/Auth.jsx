@@ -16,6 +16,7 @@ export default function Auth({ isOpen, popUpClose }) {
     userName: "",
     email: "",
     password: "",
+    avatar: null,
   });
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -31,6 +32,7 @@ export default function Auth({ isOpen, popUpClose }) {
       [e.target.id]: e.target.value,
     });
   }
+
   async function handleSignUpSubmit(e) {
     e.preventDefault();
     try {
@@ -39,6 +41,7 @@ export default function Auth({ isOpen, popUpClose }) {
         userName: signUpForm.userName,
         email: signUpForm.email,
         password: signUpForm.password,
+        avatar: signUpForm.avatar,
       });
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -56,7 +59,7 @@ export default function Auth({ isOpen, popUpClose }) {
   if (!isOpen) {
     return null;
   }
-
+  console.log(currentUser);
   return (
     <div className="h-screen w-screen bg-red-800 fixed flex justify-center items-center">
       <div className="bg-green-800 h-5/6 w-9/20 rounded-xl ">
@@ -93,7 +96,15 @@ export default function Auth({ isOpen, popUpClose }) {
             </div>
           ) : (
             <div className="">
-              <form onSubmit={handleSignUpSubmit}>
+              <form onSubmit={handleSignUpSubmit} enctype="multipart/form-data">
+                <label htmlFor="avatar">Photo</label>
+                <input
+                  type="file"
+                  id="avatar"
+                  value={signUpForm.avatar}
+                  onChange={signUpFormDataChange}
+                  accept="image/png, image/jpeg"
+                />
                 <label htmlFor="name">Name</label>
                 <input
                   type="text"

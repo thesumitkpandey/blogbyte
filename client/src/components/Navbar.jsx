@@ -3,8 +3,10 @@ import { useState } from "react";
 import categories from "../utils/categories";
 import Auth from "./Auth";
 import logo from "../assets/logo.png";
+import { useSelector } from "react-redux";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const currentUser = useSelector((state) => state.user.currentUser);
   //#5340ff main color
   function popUp() {
     setIsOpen(!isOpen);
@@ -34,7 +36,11 @@ export default function Navbar() {
           ))}
         </div>
         <div className="">
-          <button onClick={popUp}>Sign In</button>
+          {currentUser ? (
+            <h1>{currentUser.name}</h1>
+          ) : (
+            <button onClick={popUp}>Sign In</button>
+          )}
         </div>
       </div>
       <Auth isOpen={isOpen} popUpClose={popUpClose} />

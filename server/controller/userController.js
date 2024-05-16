@@ -4,12 +4,13 @@ import users from "../model/usersModel.js";
 import bcrypt from "bcrypt";
 import jwt, { decode } from "jsonwebtoken";
 import crypto from "crypto";
+import uploadOnCloudinary from "../utils/cloudinary.js";
 import restrictTo from "../middleware/restrictTo.js";
 
 const signUp = asyncErrorHandler(async (req, res, next) => {
   //We can also add input santization using validator library
-
-  const { name, userName, email, password } = req.body;
+  console.log(req.body);
+  const { name, userName, email, password, avatar } = req.body;
   if (!name || !userName || !email || !password) {
     return next(new CustomError("All fields are mandatory", 400));
   }
@@ -17,13 +18,15 @@ const signUp = asyncErrorHandler(async (req, res, next) => {
   if (isExisting) {
     return next(new CustomError("User already exists", 401));
   }
+  if (avatar) {
+    uploadOnCloudinary(avatar);
+  }
   let newUser = await users.create({
     name,
     userName,
     password,
     email,
   });
-
   res.status(201).json({
     success: true,
     data: newUser,
@@ -58,6 +61,7 @@ const signIn = asyncErrorHandler(async (req, res, next) => {
       expiresIn: process.env.JWT_EXPIRATION,
     },
   );
+
   res.status(200).json({
     success: true,
     token: jwtToken,
