@@ -10,7 +10,7 @@ import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 export default function Footer() {
   return (
-    <div className="bg-white h-28">
+    <div className="bg-[rgb(242,242,242)] h-28">
       <div>
         <ul className="flex justify-center space-x-8 md:justify-end ">
           <img src={logo} alt="logo" className="hidden md:block " />

@@ -8,6 +8,7 @@ import {
   protect,
   forgotPassword,
   deleteMyAccount,
+  resetPassword,
 } from "../controller/userController.js";
 const router = express.Router();
 
@@ -15,7 +16,8 @@ const router = express.Router();
 router
   .post("/signUp", upload.single("avatar"), signUp)
   .post("/signIn", signIn)
-  .post("/forgot", forgotPassword)
-  .delete("/deletemyaccount", protect, deleteMyAccount);
+  .post("/forgotpassword", forgotPassword)
+  .delete("/deletemyaccount", protect, deleteMyAccount)
+  .patch("/resetpassword/:token", resetPassword);
 
 export default router;

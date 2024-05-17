@@ -6,10 +6,10 @@ import jwt, { decode } from "jsonwebtoken";
 import crypto from "crypto";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 import restrictTo from "../middleware/restrictTo.js";
-
+import nodemailer from "nodemailer";
 const signUp = asyncErrorHandler(async (req, res, next) => {
   //We can also add input santization using validator library
-  console.log(req.body);
+
   const { name, userName, email, password, avatar } = req.body;
   if (!name || !userName || !email || !password) {
     return next(new CustomError("All fields are mandatory", 400));
@@ -18,13 +18,14 @@ const signUp = asyncErrorHandler(async (req, res, next) => {
   if (isExisting) {
     return next(new CustomError("User already exists", 401));
   }
+  let hashedPassword = await bcrypt.hash(password, 10);
   if (avatar) {
     uploadOnCloudinary(avatar);
   }
   let newUser = await users.create({
     name,
     userName,
-    password,
+    password: hashedPassword,
     email,
   });
   res.status(201).json({
@@ -34,7 +35,6 @@ const signUp = asyncErrorHandler(async (req, res, next) => {
 });
 
 const signIn = asyncErrorHandler(async (req, res, next) => {
-  console.log(req.body);
   //Input sanatization can be perforemd here also withh the help of validator
   let { userName, email, password } = req.body;
   if (!userName && !email) {
@@ -106,16 +106,55 @@ const forgotPassword = asyncErrorHandler(async (req, res, next) => {
   if (!email) {
     return next(new CustomError("Please enter your email", 400));
   }
-  const user = users.findOne({ email });
+  const user = await users.findOne({ email });
   if (!user) {
-    return next(
-      new CustomError("Please enter correct userName or Password", 400),
-    );
+    return next(new CustomError("Please enter correct email", 400));
   }
-  const resetToken = users.createPasswordResetToken();
-  users.save({ validateBeforeSave: false });
-  next();
+  const randomResetToken = await crypto.randomBytes(32).toString("hex");
+  const passwordResetToken = await bcrypt.hash(randomResetToken, 10);
+  user.passwordResetExpiresIn = Date.now() + 10 * 60 * 1000;
+  user.passwordResetToken = passwordResetToken;
+  await user.save();
+  //This prototype response should be modified
+  res.status(200).json({
+    success: true,
+    link: `http://localhost:8000/api/v1/users/resetpassword/${randomResetToken}`,
+    resetBefore: user.passwordResetExpiresIn,
+  });
+  /*
+    script to send randomvresettoken will be send to the user through email here this, response will not be send actually
+  */
 });
+const resetPassword = asyncErrorHandler(async (req, res, next) => {
+  const newPassword = req.body.newPassword;
+  const token = req.params.token;
+  if (!newPassword || !token) {
+    return next(new CustomError("Missing new password or token inputs", 401));
+  }
+  //There is one security flaw if more than one user has applied to reset password then it willnot work
+  const user = await users.findOne({
+    passwordResetExpiresIn: { $gt: Date.now() },
+  });
+  if (!user) {
+    return next(new CustomError("Try again", 404));
+  }
+
+  let isMatching = await bcrypt.compare(token, user.passwordResetToken);
+  if (!isMatching) {
+    return next(new CustomError("Invalid Link", 404));
+  }
+  user.password = newPassword;
+  user.passwordResetExpiresIn = undefined;
+  user.passwordResetToken = undefined;
+  user.passwordChangedAt = Date.now();
+  await user.save();
+  res.status(200).json({
+    success: true,
+    message: "Password successfully changed now sign in again",
+  });
+});
+
+const updateMe = asyncErrorHandler(async (req, res, next) => {});
 const deleteMyAccount = asyncErrorHandler(async (req, res, next) => {
   let user = await users.findByIdAndUpdate(req.user.id, { active: false });
   res.status(204).json({
@@ -124,4 +163,11 @@ const deleteMyAccount = asyncErrorHandler(async (req, res, next) => {
   });
   next();
 });
-export { signUp, signIn, protect, forgotPassword, deleteMyAccount };
+export {
+  signUp,
+  signIn,
+  protect,
+  forgotPassword,
+  deleteMyAccount,
+  resetPassword,
+};

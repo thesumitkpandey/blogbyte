@@ -1,49 +1,47 @@
-import { NavLink, Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { FcSearch } from "react-icons/fc";
+import { IoMenu } from "react-icons/io5";
 import categories from "../utils/categories";
-import Auth from "./Auth";
-import logo from "../assets/logo.png";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { MdDarkMode } from "react-icons/md";
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const currentUser = useSelector((state) => state.user.currentUser);
-  //#5340ff main color
-  function popUp() {
-    setIsOpen(!isOpen);
-  }
-  function popUpClose() {
-    setIsOpen(!isOpen);
+  const [open, setOpen] = useState(false);
+  function onHamburgerClick() {
+    setOpen(!open);
   }
   return (
-    <>
-      <div className="h-12 flex  bg-white justify-between  shadow-lg hover:shadow-xl transition-shadow duration-300">
-        <div className="rounded-xl overflow-hidden">
-          <Link to="/">
-            <img className="w-full h-full object-cover" src={logo} />
-          </Link>
-        </div>
-        <div className="">
-          {categories.map((value) => (
-            <div key={value} className="">
-              <NavLink
-                to={`/${value}`}
-                className={({ isActive }) => (isActive ? "" : "undefined")}
-                end
-              >
-                {value}
-              </NavLink>
-            </div>
-          ))}
-        </div>
-        <div className="">
-          {currentUser ? (
-            <h1>{currentUser.name}</h1>
-          ) : (
-            <button onClick={popUp}>Sign In</button>
-          )}
-        </div>
+    <nav
+      className={`bg-white p-6 h-10 fixed shadow-[rgba(0,_0,_0,_0.2)_0px_60px_40px_-7px] w-screen flex justify-between items-center`}
+    >
+      <Link to="/">
+        <div className="h1">logo</div>
+      </Link>
+      <ul
+        className={`flex md:flex space-x-12 flex-col md:flex-row ${
+          open ? "block" : "hidden"
+        } items-center`}
+      >
+        {categories.map((category) => (
+          <li key={category}>
+            <NavLink
+              to={`/${category}`}
+              className={({ isActive }) => (isActive ? "underline " : "")}
+            >
+              {category}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+      <div className="flex space-x-4 justify-between items-center">
+        <FcSearch className=" text-2xl" />
+        <MdDarkMode className=" text-2xl" />
+        <Link to="/signin">
+          <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded transform hover:scale-110 transition duration-300 ease-in-out">
+            Sign up
+          </button>
+        </Link>
+        <IoMenu className="md:hidden" onClick={onHamburgerClick} />
       </div>
-      <Auth isOpen={isOpen} popUpClose={popUpClose} />
-    </>
+    </nav>
   );
 }
