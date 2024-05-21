@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import CustomError from "../utils/CustomError.js";
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -37,6 +38,7 @@ const userSchema = new mongoose.Schema(
     active: {
       type: Boolean,
       default: true,
+      select: false,
     },
     passwordResetExpiresIn: {
       type: Date,
@@ -57,6 +59,10 @@ userSchema.pre("save", async function (next) {
   }
 });
 
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: true });
+  next();
+});
 const users = mongoose.model("users", userSchema);
 
 export default users;

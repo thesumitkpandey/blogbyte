@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import multer from "multer";
-const upload = multer({ dest: "../public" });
+const upload = multer({ dest: "public/" });
 
 import {
   signUp,
@@ -9,6 +9,9 @@ import {
   forgotPassword,
   deleteMyAccount,
   resetPassword,
+  updatePassword,
+  updateProfile,
+  sendCookie,
 } from "../controller/userController.js";
 const router = express.Router();
 
@@ -18,6 +21,11 @@ router
   .post("/signIn", signIn)
   .post("/forgotpassword", forgotPassword)
   .delete("/deletemyaccount", protect, deleteMyAccount)
-  .patch("/resetpassword/:token", resetPassword);
-
+  .patch("/resetpassword/:token", resetPassword)
+  .patch("/updatepasssword", updatePassword)
+  .patch("/updateprofile", protect, updateProfile)
+  .get("/cookie", sendCookie)
+  .get("/test", (req, res, next) => {
+    console.log(req.cookies);
+  });
 export default router;
