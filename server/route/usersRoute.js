@@ -11,6 +11,7 @@ import {
   resetPassword,
   updatePassword,
   updateProfile,
+  googleAuth,
   sendCookie,
 } from "../controller/userController.js";
 const router = express.Router();
@@ -19,6 +20,7 @@ const router = express.Router();
 router
   .post("/signUp", upload.single("avatar"), signUp)
   .post("/signIn", signIn)
+  .post("/googleauth", googleAuth)
   .post("/forgotpassword", forgotPassword)
   .delete("/deletemyaccount", protect, deleteMyAccount)
   .patch("/resetpassword/:token", resetPassword)

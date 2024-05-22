@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
 import dotenv from "dotenv";
 dotenv.config();
 cloudinary.config({
@@ -11,9 +12,7 @@ const uploadOnCloudinary = async (imagePath) => {
     const result = await cloudinary.uploader.upload(imagePath, {
       folder: "avatars",
     });
-    fs.unlinkSync(imagePath);
-
-    return result;
+    return result.url;
   } catch (error) {
     console.error("Error uploading to Cloudinary:", error);
     throw error;

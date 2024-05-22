@@ -32,7 +32,7 @@ export default function Signin() {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-transparent px-4 py-10 md:py-20">
-      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-2xl overflow-hidden shadow-2xl ">
+      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded- overflow-hidden shadow-2xl ">
         <div className="hidden md:block w-full md:w-1/2">
           <img
             src={authentication}

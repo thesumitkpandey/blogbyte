@@ -50,7 +50,6 @@ const signIn = asyncErrorHandler(async (req, res, next) => {
   if (!correctUserData) {
     return next(new CustomError("Incorrect credentials please try again", 400));
   }
-  console.log(password, correctUserData.password);
 
   let isValidPassword = await bcrypt.compare(
     password,
@@ -215,6 +214,44 @@ const sendCookie = asyncErrorHandler(async (req, res, next) => {
     message: "cookie sent successfully",
   });
 });
+const googleAuth = asyncErrorHandler(async (req, res, next) => {
+  const { email, displayName, photoURL, uid } = req.body.data;
+
+  let isExisting = await users.findOne({ email });
+  const newPhotoURL = await uploadOnCloudinary(photoURL);
+  if (!isExisting) {
+    const randomPassword = await crypto.randomBytes(15).toString("hex");
+    //First delete teh user from the database and then set the program with the help of cloudinary to upload the picture link in database
+    const newUser = users.create({
+      name: displayName,
+      email: email,
+      userName: uid,
+      password: randomPassword,
+      avatar: photoURL,
+    });
+    res.status(201).json({
+      success: true,
+    });
+  } else {
+    const jwtToken = jwt.sign(
+      { id: isExisting._id },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: process.env.JWT_EXPIRATION,
+      },
+    );
+    res.status(200).json({
+      success: true,
+      token: jwtToken,
+      user: {
+        name: isExisting.name,
+        id: isExisting.id,
+        email: isExisting.email,
+        profilePicture: isExisting.profilePicture,
+      },
+    });
+  }
+});
 export {
   signUp,
   signIn,
@@ -225,4 +262,5 @@ export {
   resetPassword,
   updatePassword,
   updateProfile,
+  googleAuth,
 };
