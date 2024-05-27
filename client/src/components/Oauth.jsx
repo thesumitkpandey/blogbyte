@@ -20,7 +20,7 @@ export default function Oauth() {
         data: googleAuthResponse.user,
       });
       response.data.user ? dispatch(signIn(response.data.user)) : "";
-      navigate("/");
+      navigate(-1);
     } catch (err) {
       console.log("Please try again ", err);
     }

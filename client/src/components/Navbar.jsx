@@ -5,14 +5,18 @@ import categories from "../utils/categories";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MdDarkMode } from "react-icons/md";
+import ProfilePopUp from "./ProfilePopUp";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [isProfilePopUpOpen, setIsProfilePopUpOpen] = useState(false);
+  function darkModeClick() {}
   function onHamburgerClick() {
     setOpen(!open);
   }
 
   const currentUser = useSelector((state) => state.user.currentUser);
-
+  const darkMode = useSelector((state) => state.theme.darkMode);
+  console.log(currentUser);
   return (
     <nav
       className={`bg-white p-6 h-10  text-black font-merriweather text-[18px] sticky shadow-[rgba(0,_0,_0,_0.2)_0px_60px_40px_-7px] w-screen flex justify-between items-center`}
@@ -42,9 +46,11 @@ export default function Navbar() {
       </ul>
       <div className="flex space-x-4 justify-between items-center">
         <FcSearch className=" text-2xl" />
-        <MdDarkMode className=" text-2xl" />
+        <MdDarkMode onClick={darkModeClick} className=" text-2xl" />
         {currentUser ? (
-          <h1>hi, {currentUser.name}</h1>
+          <button onClick={() => setIsProfilePopUpOpen(!isProfilePopUpOpen)}>
+            hi, {currentUser.name}
+          </button>
         ) : (
           <Link to="/signin">
             <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded transform hover:scale-110 transition duration-300 ease-in-out">
@@ -52,7 +58,7 @@ export default function Navbar() {
             </button>
           </Link>
         )}
-
+        {!isProfilePopUpOpen ? null : <ProfilePopUp userData={currentUser} />}
         <IoMenu className="md:hidden" onClick={onHamburgerClick} />
       </div>
     </nav>

@@ -9,15 +9,12 @@ export default function Signup() {
     userName: "",
     email: "",
     password: "",
-    avatar: undefined,
   });
   function signUpFormDataChange(e) {
     setSignUpForm({
       ...signUpForm,
       [e.target.id]: e.target.value,
-      avatar: files && files[0],
     });
-    console.log(e.target.file);
   }
   async function handleSignUpSubmit(e) {
     e.preventDefault();
@@ -28,7 +25,6 @@ export default function Signup() {
         userName: signUpForm.userName,
         email: signUpForm.email,
         password: signUpForm.password,
-        avatar: signUpForm.avatar,
       });
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -51,18 +47,6 @@ export default function Signup() {
             onSubmit={handleSignUpSubmit}
             encType="multipart/form-data"
           >
-            <label htmlFor="avatar" className="block text-gray-700">
-              Photo
-            </label>
-            <input
-              type="file"
-              id="avatar"
-              name="avatar"
-              value={signUpForm.avatar}
-              onChange={signUpFormDataChange}
-              accept="image/*"
-              className="w-full mt-2 mb-4 p-2 border rounded"
-            />
             <label htmlFor="name" className="block text-gray-700">
               Name
             </label>

@@ -8,7 +8,7 @@ import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 export default function Footer() {
   return (
-    <div className="w-screen h-40 bg-[#f2f2f2] relative">
+    <div className="w-screen h-40  bg-[#f2f2f2] relative">
       <div className="justify-between flex h-12 px-6">
         <div className="">
           <img src={logo} className="rounded-sm h-12" />

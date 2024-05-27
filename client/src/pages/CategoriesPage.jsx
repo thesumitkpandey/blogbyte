@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function Categories() {
-  return <div>Categories</div>;
+  return <div className="bg-red-100 h-screen">Categories</div>;
 }

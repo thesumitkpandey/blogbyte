@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 export default function Homepage() {
-  return <div>This is homepage</div>;
+  return <Link to="/user/profile">secret</Link>;
 }

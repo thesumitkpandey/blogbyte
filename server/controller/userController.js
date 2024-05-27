@@ -11,8 +11,6 @@ import nodemailer from "nodemailer";
 //We can also perform input sanitization using validator or any other library
 const signUp = asyncErrorHandler(async (req, res, next) => {
   const { name, userName, email, password } = req.body;
-  const avatar = req.file;
-  console.log(avatar);
   if (!name || !userName || !email || !password) {
     return next(new CustomError("All fields are mandatory", 400));
   }
@@ -67,40 +65,66 @@ const signIn = asyncErrorHandler(async (req, res, next) => {
     },
   );
 
+  res.cookie("token", jwtToken, {
+    httpOnly: true,
+    secure: false, // Set to true if using HTTPS in production
+    maxAge: 15 * 24 * 60 * 60 * 1000,
+    //sameSite: "Strict"
+  });
   res.status(200).json({
     success: true,
-    token: jwtToken,
     user: {
       name: correctUserData.name,
-      id: correctUserData.id,
       email: correctUserData.email,
       profilePicture: correctUserData.profilePicture,
+      userName: correctUserData.userName,
     },
   });
 });
+
+//This route can be used if we are setting cookies in header instead of cookie
+// const protect = asyncErrorHandler(async (req, res, next) => {
+//   let token = "";
+//   if (
+//     req.headers.authorization &&
+//     req.headers.authorization.startsWith("Bearer")
+//   ) {
+//     token = req.headers.authorization.split(" ")[1];
+//   } else {
+//     return next(new CustomError("You do not have jwt go and sign in ", 401));
+//   }
+//   //although it will not return a promise we can make it do by utils library and promisify
+//   const decodedToken = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+//   const freshUser = await users.findById(decodedToken.id);
+//   if (!freshUser) {
+//     return next(
+//       new CustomError("User belonging to the account lo longer exists", 404),
+//     );
+//   }
+//   // // if (freshUser.passwordChangedAt >= decodedToken.iat) {
+//   // //   return next(
+//   // //     new CustomError("passowrd has been updated please log in again", 401),
+//   // //   );
+//   // }
+//   req.user = freshUser;
+//   next();
+// });
+
 const protect = asyncErrorHandler(async (req, res, next) => {
-  let token = "";
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-  } else {
-    return next(new CustomError("You do not have jwt go and sign in ", 401));
+  const token = req.cookies.token;
+  if (!token) {
+    return next(new CustomError("You do not have jwt go and sign in", 401));
   }
-  //although it will not return a promise we can make it do by utils library and promisify
+
   const decodedToken = await jwt.verify(token, process.env.JWT_SECRET_KEY);
   const freshUser = await users.findById(decodedToken.id);
+
   if (!freshUser) {
     return next(
-      new CustomError("User belonging to the account lo longer exists", 404),
+      new CustomError("User belonging to the account no longer exists", 404),
     );
   }
-  // // if (freshUser.passwordChangedAt >= decodedToken.iat) {
-  // //   return next(
-  // //     new CustomError("passowrd has been updated please log in again", 401),
-  // //   );
-  // }
+
   req.user = freshUser;
   next();
 });
@@ -245,9 +269,9 @@ const googleAuth = asyncErrorHandler(async (req, res, next) => {
       token: jwtToken,
       user: {
         name: isExisting.name,
-        id: isExisting.id,
+        userName: isExisting.id,
         email: isExisting.email,
-        profilePicture: isExisting.profilePicture,
+        avatar: isExisting.profilePicture,
       },
     });
   }
