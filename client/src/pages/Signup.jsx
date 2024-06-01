@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 import Oauth from "../components/Oauth";
 import authentication from "../assets/authentication.jpg";
+import { useNavigate } from "react-router-dom";
 export default function Signup() {
   const [signUpForm, setSignUpForm] = useState({
     name: "",
@@ -10,15 +12,40 @@ export default function Signup() {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
   function signUpFormDataChange(e) {
     setSignUpForm({
       ...signUpForm,
-      [e.target.id]: e.target.value,
+      [e.target.id]: e.target.value.trim(),
     });
   }
   async function handleSignUpSubmit(e) {
     e.preventDefault();
-
+    //Form validation
+    if (!/^[a-zA-Z\s]+$/.test(signUpForm.name)) {
+      toast.error("Please enter correct NAME");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signUpForm.email)) {
+      toast.error("Please enter correct EMAIL");
+      return;
+    }
+    if (!/^[a-zA-Z0-9]{6,12}$/.test(signUpForm.userName)) {
+      toast.error(
+        "Username should be 6-12 digits including numbers and characters only"
+      );
+      return;
+    }
+    if (
+      !/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,12}$/.test(
+        signUpForm.password
+      )
+    ) {
+      toast.error(
+        "Password should be 6-12 digits long with at least one character, number and special character"
+      );
+      return;
+    }
     try {
       const response = await axios.post("/api/v1/users/signup", {
         name: signUpForm.name,
@@ -26,6 +53,8 @@ export default function Signup() {
         email: signUpForm.email,
         password: signUpForm.password,
       });
+
+      navigate("/signin?signup=success");
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -33,6 +62,9 @@ export default function Signup() {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-transparent px-4 py-10 md:py-20">
+      <div>
+        <Toaster />
+      </div>
       <div className="flex flex-col md:flex-row w-full max-w-6xl bg-white rounded-2xl overflow-hidden shadow-2xl">
         <div className="hidden md:block w-full md:w-1/2">
           <img
@@ -75,12 +107,11 @@ export default function Signup() {
               Email
             </label>
             <input
-              type="email"
+              type="text"
               id="email"
               value={signUpForm.email}
               placeholder="Enter your email"
               onChange={signUpFormDataChange}
-              required
               className="w-full mt-2 mb-4 p-2 border rounded"
             />
             <label htmlFor="password" className="block text-gray-700">

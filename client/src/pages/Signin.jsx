@@ -1,10 +1,11 @@
 import authentication from "../assets/authentication.jpg";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import Oauth from "../components/Oauth";
 import { signIn, signOut } from "../redux/user/userSlice";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Signin() {
   const [signInForm, setSignInForm] = useState({
@@ -12,6 +13,13 @@ export default function Signin() {
     password: "",
   });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const path = useLocation();
+  useEffect(() => {
+    if (path.search) {
+      toast.success("Successful! Now please sign in");
+    }
+  }, []);
 
   function signInFormDataChange(e) {
     setSignInForm({
@@ -22,16 +30,30 @@ export default function Signin() {
 
   async function handleSignInSubmit(e) {
     e.preventDefault();
+    if (
+      !/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,12}$/.test(
+        signInForm.password
+      )
+    ) {
+      toast.error(
+        "Password should be 6-12 digits long with at least one character, number and special character"
+      );
+      return;
+    }
     const response = await axios.post("/api/v1/users/signin", {
       password: signInForm.password,
       [signInForm.userName.includes("@") ? "email" : "userName"]:
         signInForm.userName,
     });
+    navigate(-2);
     dispatch(signIn(response.data.user));
   }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-transparent px-4 py-10 md:py-20">
+      <div>
+        <Toaster />
+      </div>
       <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded- overflow-hidden shadow-2xl ">
         <div className="hidden md:block w-full md:w-1/2">
           <img
