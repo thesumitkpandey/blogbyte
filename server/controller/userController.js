@@ -74,6 +74,7 @@ const signIn = asyncErrorHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     user: {
+      id: correctUserData._id,
       name: correctUserData.name,
       email: correctUserData.email,
       profilePicture: correctUserData.profilePicture,
@@ -276,7 +277,30 @@ const googleAuth = asyncErrorHandler(async (req, res, next) => {
     });
   }
 });
-
+const verifyToken = asyncErrorHandler(async (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return next(new CustomError("No cookies found", 404));
+  }
+  const decodedToken = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+  const correctUserData = await users.findById(decodedToken.id);
+  if (!decodedToken || !correctUserData) {
+    res.clearCookie("token");
+    res.status(404).json({
+      message: "Invalid cookie",
+    });
+  }
+  res.status(200).json({
+    success: true,
+    user: {
+      id: correctUserData._id,
+      name: correctUserData.name,
+      email: correctUserData.email,
+      avatar: correctUserData.avatar,
+      userName: correctUserData.userName,
+    },
+  });
+});
 export {
   signUp,
   signIn,
@@ -288,4 +312,5 @@ export {
   updatePassword,
   updateProfile,
   googleAuth,
+  verifyToken,
 };

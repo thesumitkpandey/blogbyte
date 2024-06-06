@@ -13,6 +13,7 @@ import {
   updateProfile,
   googleAuth,
   sendCookie,
+  verifyToken,
 } from "../controller/userController.js";
 const router = express.Router();
 
@@ -29,5 +30,6 @@ router
   .get("/cookie", sendCookie)
   .get("/test", (req, res, next) => {
     console.log(req.cookies);
-  });
+  })
+  .post("/verifytoken", verifyToken);
 export default router;

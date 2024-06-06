@@ -5,6 +5,7 @@ import categories from "../utils/categories";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MdDarkMode } from "react-icons/md";
+import logo from "../assets/logo.png";
 import ProfilePopUp from "./ProfilePopUp";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -19,10 +20,10 @@ export default function Navbar() {
   console.log(currentUser);
   return (
     <nav
-      className={`bg-white p-6 h-10  text-black font-merriweather text-[18px] sticky shadow-[rgba(0,_0,_0,_0.2)_0px_60px_40px_-7px] w-screen flex justify-between items-center`}
+      className={`bg-white p-6 h-10 z-80 text-black font-merriweather text-[18px] sticky shadow-[rgba(0,_0,_0,_0.2)_0px_60px_40px_-7px] w-screen flex justify-between items-center`}
     >
       <Link to="/">
-        <div className="h1">logo</div>
+        <img className="h-10 w-30 rounded-md " src={logo} />
       </Link>
       <ul
         className={`flex md:flex space-x-12 flex-col bg-black md:bg-white md:h-10  h-screen md:flex-row ${
@@ -35,7 +36,7 @@ export default function Navbar() {
               to={`/${category}`}
               className={({ isActive }) =>
                 isActive
-                  ? "rounded-m min-h-12 bg-[rgb(59,130,246)] text-white "
+                  ? "rounded-m min-h-12 bg-[rgb(30,46,51)] text-white "
                   : ""
               }
             >
@@ -48,9 +49,12 @@ export default function Navbar() {
         <FcSearch className=" text-2xl" />
         <MdDarkMode onClick={darkModeClick} className=" text-2xl" />
         {currentUser ? (
-          <button onClick={() => setIsProfilePopUpOpen(!isProfilePopUpOpen)}>
-            hi, {currentUser.name}
-          </button>
+          <div onClick={() => setIsProfilePopUpOpen(!isProfilePopUpOpen)}>
+            <img
+              src={currentUser.avatar}
+              className="w-10 h-10 rounded-full cursor-pointer"
+            />
+          </div>
         ) : (
           <Link to="/signin">
             <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded transform hover:scale-110 transition duration-300 ease-in-out">

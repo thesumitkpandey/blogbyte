@@ -6,8 +6,8 @@ export const themeSlice = createSlice({
   name: "darkMode",
   initialState,
   reducers: {
-    setDarkMode: (state, action) => {
-      state.darkMode = action.payload;
+    changeTheme: (state, action) => {
+      state.darkMode = !action.payload;
     },
   },
 });
