@@ -251,11 +251,26 @@ const googleAuth = asyncErrorHandler(async (req, res, next) => {
       name: displayName,
       email: email,
       userName: uid,
+      avatar: newPhotoURL,
       password: randomPassword,
-      avatar: photoURL,
+    });
+    const jwtToken = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: process.env.JWT_EXPIRATION,
+    });
+    res.cookie("token", jwtToken, {
+      httpOnly: true,
+      secure: false, // Set to true if using HTTPS in production
+      maxAge: 15 * 24 * 60 * 60 * 1000,
+      //sameSite: "Strict"
     });
     res.status(201).json({
       success: true,
+      user: {
+        name: newUser.name,
+        userName: newUser.id,
+        email: newUser.email,
+        avatar: newUser.profilePicture,
+      },
     });
   } else {
     const jwtToken = jwt.sign(
@@ -265,14 +280,19 @@ const googleAuth = asyncErrorHandler(async (req, res, next) => {
         expiresIn: process.env.JWT_EXPIRATION,
       },
     );
+    res.cookie("token", jwtToken, {
+      httpOnly: true,
+      secure: false, // Set to true if using HTTPS in production
+      maxAge: 15 * 24 * 60 * 60 * 1000,
+      //sameSite: "Strict"
+    });
     res.status(200).json({
       success: true,
-      token: jwtToken,
       user: {
         name: isExisting.name,
         userName: isExisting.id,
         email: isExisting.email,
-        avatar: isExisting.profilePicture,
+        avatar: isExisting.avatar,
       },
     });
   }

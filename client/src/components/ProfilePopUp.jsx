@@ -6,9 +6,15 @@ export default function ProfilePopUp({ userData }) {
         <Link to={`/u/${userData.userName}`}>
           <li className="cursor-pointer hover:text-blue-500">Profile</li>
         </Link>
-        <li className="cursor-pointer hover:text-blue-500">Write</li>
-        <li className="cursor-pointer hover:text-blue-500">Activities</li>
-        <li className="cursor-pointer hover:text-blue-500">Change Password</li>
+        <Link to={`/u/${userData.userName}?tab=write`}>
+          <li className="cursor-pointer hover:text-blue-500">Write</li>
+        </Link>
+        <Link to={`/u/${userData.userName}?tab=library`}>
+          <li className="cursor-pointer hover:text-blue-500">Library</li>
+        </Link>
+        <Link to={`/u/${userData.userName}?tab=updateprofile`}>
+          <li className="cursor-pointer hover:text-blue-500">Update Profile</li>
+        </Link>
         <li className="cursor-pointer hover:text-blue-500">Sign Out</li>
       </ul>
     </div>

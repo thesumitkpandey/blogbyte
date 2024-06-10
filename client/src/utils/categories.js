@@ -1,8 +1,10 @@
 const categories = [
-  "Finance",
-  "Politics",
-  "Technology",
-  "Sports",
-  "Entertainment",
+  "Software",
+  "AI",
+  "Cloud",
+  "Gadgets",
+  "Security",
+  "Entrepreneurship",
+  "IoT",
 ];
 export default categories;
