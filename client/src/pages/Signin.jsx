@@ -15,6 +15,7 @@ export default function Signin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const path = useLocation();
+
   useEffect(() => {
     if (path.search) {
       toast.success("Successful! Now please sign in");
@@ -45,8 +46,9 @@ export default function Signin() {
       [signInForm.userName.includes("@") ? "email" : "userName"]:
         signInForm.userName,
     });
-    navigate(-2);
+
     dispatch(signIn(response.data.user));
+    navigate(`/u/${response.data.user.userName}`);
   }
 
   return (

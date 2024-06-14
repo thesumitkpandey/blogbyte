@@ -1,11 +1,15 @@
-import { useParams, useSearchParams, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import MainProfile from "../components/MainProfile";
+import Sidebar from "../components/Sidebar";
+import Write from "../components/Write";
+import { useSelector } from "react-redux";
 export default function Profile() {
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [tab] = useSearchParams();
-
   return (
-    <>
-      <h1>the tab is {tab.get("tab")} </h1>
-    </>
+    <div className="flex flex-col md:flex-row">
+      <Sidebar currentUser={currentUser} />
+      {tab.get("tab") && <Write />}
+    </div>
   );
 }

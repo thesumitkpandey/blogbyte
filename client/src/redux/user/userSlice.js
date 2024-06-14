@@ -9,7 +9,7 @@ export const userSlice = createSlice({
     signIn: (state, action) => {
       state.currentUser = action.payload;
     },
-    signOut: (state) => {
+    signOut: (state, action) => {
       state.currentUser = null;
     },
   },

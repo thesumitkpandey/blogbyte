@@ -321,6 +321,10 @@ const verifyToken = asyncErrorHandler(async (req, res, next) => {
     },
   });
 });
+const signOut = asyncErrorHandler(async (req, res, next) => {
+  res.clearCookie("token");
+  res.status(200).json({ success: true });
+});
 export {
   signUp,
   signIn,
@@ -333,4 +337,5 @@ export {
   updateProfile,
   googleAuth,
   verifyToken,
+  signOut,
 };

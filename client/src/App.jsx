@@ -14,6 +14,7 @@ import axios from "axios";
 import Error404 from "./pages/Error404";
 import Cookies from "js-cookie";
 import Profile from "./pages/Profile";
+
 const router = createBrowserRouter([
   {
     path: "/",

@@ -4,7 +4,7 @@ const categories = [
   "Cloud",
   "Gadgets",
   "Security",
-  "Entrepreneurship",
+  "Startups",
   "IoT",
 ];
 export default categories;

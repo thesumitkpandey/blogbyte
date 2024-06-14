@@ -14,6 +14,7 @@ import {
   googleAuth,
   sendCookie,
   verifyToken,
+  signOut,
 } from "../controller/userController.js";
 const router = express.Router();
 
@@ -31,5 +32,7 @@ router
   .get("/test", (req, res, next) => {
     console.log(req.cookies);
   })
-  .post("/verifytoken", verifyToken);
+  .post("/verifytoken", verifyToken)
+  .get("/signout", protect, signOut);
 export default router;
+//s
