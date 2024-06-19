@@ -1,14 +1,28 @@
-import CustomError from "../utils/CustomError";
-import asyncErrorHandler from "../utils/asyncErrorHandler";
-import posts from "../model/postModel";
+import CustomError from "../utils/CustomError.js";
+import asyncErrorHandler from "../utils/asyncErrorHandler.js";
+import post from "../model/postModel.js";
+
 const createPost = asyncErrorHandler(async (req, res, next) => {
   const { title, content, category, author, image, slug } = req.body;
-  if (!title || !!content || !category || !author || !images || !slug) {
+
+  if (!image || !content || !category || !title || !author || !slug) {
     return next(new CustomError("All fields are mandatory", 404));
   }
-  await posts.create({
+  const isExisting = await post.findOne({ slug: slug });
+  if (isExisting) {
+    return next(new CustomError("Please use any other title", 404));
+  }
+  await post.create({
     title,
     content,
     author,
+    category,
+    slug,
+    image,
+  });
+
+  res.status(201).json({
+    success: true,
   });
 });
+export { createPost };

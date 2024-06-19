@@ -1,44 +1,81 @@
-import { FaGithub } from "react-icons/fa";
-import { FaLinkedin } from "react-icons/fa";
-import { FaFacebookSquare } from "react-icons/fa";
-import { FaTelegram } from "react-icons/fa";
-import { FaSquareXTwitter } from "react-icons/fa6";
-import { FaHeart } from "react-icons/fa";
+import {
+  FaGithub,
+  FaLinkedin,
+  FaFacebookSquare,
+  FaTelegram,
+  FaTwitter,
+} from "react-icons/fa";
+
 import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
+const socialIcons = [
+  {
+    name: "github",
+    element: <FaGithub />,
+    to: "https://github.com/thesumitkpandey",
+  },
+  {
+    name: "linkedin",
+    element: <FaLinkedin />,
+    to: "https://in.linkedin.com/in/thesumitkpandey",
+  },
+  {
+    name: "facebook",
+    element: <FaFacebookSquare />,
+    to: "https://www.facebook.com/",
+  },
+  {
+    name: "telegram",
+    element: <FaTelegram />,
+    to: "https://t.me/thesumitkpandey",
+  },
+  {
+    name: "twitter",
+    element: <FaTwitter />,
+    to: "https://twitter.com/",
+  },
+];
 export default function Footer() {
   return (
-    <div className="w-screen h-40  bg-[#f2f2f2] relative">
-      <div className="justify-between flex h-12 px-6">
-        <div className="">
-          <img src={logo} className="rounded-sm h-12" />
+    <footer className="bg-gray-200 py-8 px-6 md:px-12">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+        <div className="flex items-center space-x-4">
+          <img src={logo} alt="Logo" className="h-12" />
         </div>
-        <div className="flex gap-6">
-          <Link className="text-2xl">Contact</Link>
-          <Link className="text-2xl">Made by</Link>
+        <nav className="flex space-x-6 mt-4 md:mt-0 text-2xl">
+          <Link to="/contact" className="text-gray-800 hover:text-blue-500">
+            Contact
+          </Link>
+          <Link to="/about" className="text-gray-800 hover:text-blue-500">
+            About Us
+          </Link>
+          <Link to="/services" className="text-gray-800 hover:text-blue-500">
+            Services
+          </Link>
+        </nav>
+        <div className="flex space-x-4 text-2xl">
+          {socialIcons.map((el) => (
+            <a
+              key={el.name}
+              href={el.to}
+              className="text-gray-800 hover:text-blue-500"
+            >
+              {el.element}
+            </a>
+          ))}
         </div>
       </div>
-      <div className="flex w-full  justify-center  gap-10 text-3xl md:gap-20 ">
-        <a href="https://github.com/thesumitkpandey">
-          <FaGithub />
-        </a>
-        <a href="https://in.linkedin.com/in/thesumitkpandey">
-          <FaLinkedin />
-        </a>
-        <a href="https://www.facebook.com/">
-          <FaFacebookSquare />
-        </a>
-        <a href="https://t.me/thesumitkpandey">
-          <FaTelegram />
-        </a>
-        <a>
-          <FaSquareXTwitter />
-        </a>
+      <div className="text-center mt-8 text-gray-600">
+        <p>
+          Made with <span className="text-red-600">&hearts;</span> by{" "}
+          <a
+            href="https://sumitkpandey.com"
+            className="text-blue-600 hover:underline"
+          >
+            SumitKPandey
+          </a>
+        </p>
       </div>
-      <div className="bg-black h-5 w-screen absolute bottom-0 flex justify-center items-center p-2 text-white">
-        Made with &nbsp; <FaHeart className="text-red-700" />
-        &nbsp; by &nbsp;<Link to="https://sumitkpandey.com">SumitKPandey</Link>
-      </div>
-    </div>
+    </footer>
   );
 }

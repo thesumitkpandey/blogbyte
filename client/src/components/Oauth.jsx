@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { signIn, signOut } from "../redux/user/userSlice";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import uploadOnFirebase from "../utils/uploadOnFirebase.js";
+import { displayName } from "react-quill";
 export default function Oauth() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,9 +19,13 @@ export default function Oauth() {
       let googleAuthResponse = await signInWithPopup(auth, provider);
 
       let response = await axios.post("/api/v1/users/googleAuth", {
-        data: googleAuthResponse.user,
+        name: googleAuthResponse.user.displayName,
+        email: googleAuthResponse.user.email,
+        avatar: googleAuthResponse.user.photoURL,
+        userName: googleAuthResponse.user.uid,
       });
-      response.data.user ? dispatch(signIn(response.data.user)) : "";
+
+      response.data.success ? dispatch(signIn(response.data.user)) : "";
       navigate(`/u/${response.data.user.userName}`);
     } catch (err) {
       console.log("Please try again ", err);

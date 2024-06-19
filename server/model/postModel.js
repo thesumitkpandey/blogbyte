@@ -16,6 +16,7 @@ const postSchema = new mongoose.Schema(
     views: {
       type: Number,
       required: true,
+      default: 0,
     },
     category: {
       type: String,
@@ -34,5 +35,5 @@ const postSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const posts = mongoose.model("posts", postSchema);
-export default posts;
+const post = mongoose.model("post", postSchema);
+export default post;

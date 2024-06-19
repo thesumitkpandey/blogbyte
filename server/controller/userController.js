@@ -4,7 +4,7 @@ import users from "../model/usersModel.js";
 import bcrypt from "bcrypt";
 import jwt, { decode } from "jsonwebtoken";
 import crypto from "crypto";
-import uploadOnCloudinary from "../utils/cloudinary.js";
+
 import restrictTo from "../middleware/restrictTo.js";
 import nodemailer from "nodemailer";
 
@@ -18,13 +18,6 @@ const signUp = asyncErrorHandler(async (req, res, next) => {
   if (isExisting) {
     return next(new CustomError("User already exists", 401));
   }
-  // let avatarUrl = "";
-  // if (req.file) {
-  //   const result = await cloudinary.uploader.upload(req.file.path, {
-  //     folder: "avatars",
-  //   });
-  //   avatarUrl = result.secure_url;
-  // }
   let newUser = await users.create({
     name,
     userName,
@@ -240,19 +233,17 @@ const sendCookie = asyncErrorHandler(async (req, res, next) => {
   });
 });
 const googleAuth = asyncErrorHandler(async (req, res, next) => {
-  const { email, displayName, photoURL, uid } = req.body.data;
-
+  const { email, name, avatar, userName } = req.body;
+  console.log(req.body);
   let isExisting = await users.findOne({ email });
-  const newPhotoURL = await uploadOnCloudinary(photoURL);
   if (!isExisting) {
-    const randomPassword = await crypto.randomBytes(15).toString("hex");
-    //First delete teh user from the database and then set the program with the help of cloudinary to upload the picture link in database
+    const randomPassword = crypto.randomBytes(15).toString("hex");
     const newUser = users.create({
-      name: displayName,
+      name: name,
+      userName: userName,
       email: email,
-      userName: uid,
-      avatar: newPhotoURL,
       password: randomPassword,
+      avatar: avatar,
     });
     const jwtToken = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: process.env.JWT_EXPIRATION,
@@ -266,10 +257,11 @@ const googleAuth = asyncErrorHandler(async (req, res, next) => {
     res.status(201).json({
       success: true,
       user: {
+        id: newUser._id,
         name: newUser.name,
-        userName: newUser.id,
+        userName: newUser.userName,
         email: newUser.email,
-        avatar: newUser.profilePicture,
+        avatar: newUser.avatar,
       },
     });
   } else {
@@ -290,9 +282,10 @@ const googleAuth = asyncErrorHandler(async (req, res, next) => {
       success: true,
       user: {
         name: isExisting.name,
-        userName: isExisting.id,
+        userName: isExisting.userName,
         email: isExisting.email,
         avatar: isExisting.avatar,
+        id: isExisting._id,
       },
     });
   }

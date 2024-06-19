@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import CustomError from "../utils/CustomError.js";
+
 const userSchema = new mongoose.Schema(
   {
     name: {

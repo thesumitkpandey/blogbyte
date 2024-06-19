@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import usersRoute from "./route/usersRoute.js";
+import postRoute from "./route/postRoute.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
@@ -42,6 +43,6 @@ app.use(mongoSanitize());
 
 //url encoded and public option left
 app.use("/api/v1/users", usersRoute);
-
+app.use("/api/v1/post", postRoute);
 app.use(errorMiddleware);
 export default app;

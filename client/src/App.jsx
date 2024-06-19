@@ -31,7 +31,7 @@ const router = createBrowserRouter([
       //Protected routes
       {
         element: <Auth />,
-        children: [{ path: "u/:username", element: <Profile /> }],
+        children: [{ path: "/u/:username", element: <Profile /> }],
       },
     ],
   },

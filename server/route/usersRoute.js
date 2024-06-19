@@ -1,6 +1,4 @@
 import express, { Router } from "express";
-import multer from "multer";
-const upload = multer({ dest: "public/" });
 
 import {
   signUp,
@@ -20,7 +18,7 @@ const router = express.Router();
 
 //Authentication routes
 router
-  .post("/signUp", upload.single("avatar"), signUp)
+  .post("/signUp", signUp)
   .post("/signIn", signIn)
   .post("/googleauth", googleAuth)
   .post("/forgotpassword", forgotPassword)
